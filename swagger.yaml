@@ -10,8 +10,9 @@ info:
 servers:
   - url: "http://locahost:3000"
     description: for testing purpose
+  - url: "https://skillexchange-backend.onrender.com"
+    description: Deployed version (uptodate)
 
 paths:
   /users:
     get:
-    
