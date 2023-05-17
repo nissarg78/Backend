@@ -1,0 +1,17 @@
+openapi : "3.0.0"
+info:
+  title : Skill Exchange
+  description : just using this for the first time
+  version: 1.0.0
+  contact:
+    email: patelkrunal8469@gmail.com
+    url: "https://krunal.com"
+
+servers:
+  - url: "http://locahost:3000"
+    description: for testing purpose
+
+paths:
+  /users:
+    get:
+    
