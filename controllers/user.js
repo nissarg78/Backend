@@ -1,6 +1,7 @@
 const User= require("../models/user.js");
 const bcrypt = require('bcrypt');
 const {authtokenfun}= require('../middleware/token.js');
+const {encreption}= require('../middleware/hash.js');
 // const JWT_SECRET="nisarg@123";
 // const jwt = require('jsonwebtoken');
 
