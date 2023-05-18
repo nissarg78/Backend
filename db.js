@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 
-const url = "mongodb+srv://krunal22:WtYOpZmV1gs0KVtt@cluster0.yl6esvi.mongodb.net/?retryWrites=true&w=majority";
+const url = "mongodb+srv://krunal22:5bY4rOrQmWCeTVLw@cluster0.yl6esvi.mongodb.net/?retryWrites=true&w=majority";
 
-const ConnectToDB = mongoose.connect(url).
+// const url="mongodb://127.0.0.1:27017";
+
+const ConnectToDB = mongoose.connect(url,{
+    dbName: "Project",
+}).
 then(()=>{
     console.log("Connected to DB Successfully!");
 }).
