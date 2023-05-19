@@ -14,5 +14,34 @@ servers:
     description: Deployed version (uptodate)
 
 paths:
-  /users:
-    get:
+  /user/login:
+    post:
+      requestBody:
+        description: Enter deatils to login 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  description: Registered Email
+                Password:
+                  type: string
+                  description: Your Password
+      responses:
+        '200': #status code
+          description: A json object
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: return type
+                  message:
+                    type: string
+                    description: success message
+
