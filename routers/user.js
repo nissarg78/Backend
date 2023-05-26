@@ -3,7 +3,7 @@ const mongoose= require("mongoose");
 const User= require('../models/user.js');
 const Protect = require('../middleware/protect.js');
 
-const {register, login}= require('../controllers/user.js');
+const {register, login, profile}= require('../controllers/user.js');
 
 const userRouter= express.Router();
 
@@ -22,7 +22,8 @@ userRouter.get("/", (req, res)=>{
 
 userRouter
 .post('/register', Protect,register)
-.post('/login', login);
+.post('/login', login)
+.post('/profile', profile);
 
 
 module.exports= userRouter;

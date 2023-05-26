@@ -1,5 +1,6 @@
 const express = require('express');
 const userRouter= require('./routers/user.js');
+const cookieParser= require('cookie-parser');
 const bodyParser = require('body-parser');
 const User= require("./models/user.js");
 const cors = require('cors')
@@ -19,6 +20,7 @@ app.use(cors(
         credentials : true
     }
 ));
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
