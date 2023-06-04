@@ -37,7 +37,7 @@ const login= async(req,res)=>{
     else{
         return res.status(200).cookie("token", token, {
             httpOnly: true,
-            expires: new Date(Date.now() + 10*1000)
+            expires: new Date(Date.now() + 1000*1000)
         }).json({
             success: true,
             message: "Successfully logged in"
@@ -55,7 +55,47 @@ const login= async(req,res)=>{
 }
 
 
+const update= async ( req, res)=>{
+    let= data= req.body;
 
+    try {
+        let email= data.Email;
+        // let currName= data.currName;
+        let newName= data.newName;
+        // let currNum= data.currNum;
+        let newNum= data.newNum;
+
+        let db_id= User.findOne({Email: data.Email});
+
+        if(!db_id){
+            return res.status(404).json({ 
+                success: false,
+                message: "User not found"
+            });
+        }
+
+       let check= User.updateOne({Email: data.Email}, {$set: {Name: newName, PhoneNum: newNum}} )
+       .then(()=>{
+        return res.status(200). json({
+            success: true,
+            message: "Successfully updated"
+        });
+       })
+       .catch(()=>{
+        return res.status(401).json({
+            success: false,
+            message: "Failed to update"
+        });
+       })
+
+       
+
+    } catch (err) {
+        console.log("Error Occured at register", err);
+        return res.status(500).json({success:false,message: "Internal Server Error"});
+  
+    }
+}
  
 const register= async (req, res)=>{
     let data= req.body;
@@ -151,4 +191,4 @@ const  profile= async (req, res)=>{
     }
     };
 
-module.exports= {register, login, profile};
+module.exports= {register, login, profile, update};
