@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Information</title>
+    <style>
+        table {
+            font-family: Arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Information</h1>
+    <table>
+        <tr>
+            <th>Research ID</th>
+            <th>Publisher ID</th>
+            <th>Institute ID</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Views</th>
+            <th>Likes</th>
+            <th>Dislikes</th>
+            <th>Publish Date</th>
+        </tr>
+        <!-- Replace the following with actual data -->
+        <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.research_id %></td>
+                <td><%= user.publisher_id %></td>
+                <td><%= user.institute_id %></td>
+                <td><%= user.type %></td>
+                <td><%= user.name %></td>
+                <td><%= user.views %></td>
+                <td><%= user.likes %></td>
+                <td><%= user.dislikes %></td>
+                <td><%= user.publish_date %></td>
+            </tr>
+        <% }); %>
+        <!-- Repeat for more data rows as needed -->
+    </table>
+</body>
+</html>

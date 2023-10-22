@@ -4,13 +4,17 @@ const cookieParser= require('cookie-parser');
 const bodyParser = require('body-parser');
 const User= require("./models/user.js");
 const cors = require('cors')
+const fs= require('fs')
+const mysql= require('mysql')
 // const jwt= require('jsonwebtoken');
 const app = express();
 
 //database connection
-const ConnectToDB = require('./db');
+const ConnectToDB = require('./db.js');
 ConnectToDB;
 
+const connect= require('./sql.js')
+connect;
 
 app.use(cors(
     {
@@ -24,7 +28,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use('/user', userRouter);
+// fs.rename('text.txt', 'newText.txt', (err)=> {
+//     if(err) console.log(err);
+//     console.log('renamed');
+// })
+app.use('/', userRouter);
 
 //api documentation 
 const swaggerUi = require('swagger-ui-express');

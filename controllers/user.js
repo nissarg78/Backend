@@ -4,6 +4,11 @@ const bcrypt = require('bcrypt');
 const {authtokenfun, decode}= require('../middleware/token.js');
 const {encreption}= require('../middleware/hash.js');
 const { default: mongoose, mongo } = require("mongoose");
+const nodemailer = require('nodemailer');
+const path = require('path');
+const db= require('../Models/sql.js')
+const pg= require('pg');
+const { error } = require("console");
 // const JWT_SECRET="nisarg@123";
 // const jwt = require('jsonwebtoken');
 
@@ -28,21 +33,35 @@ const login= async(req,res)=>{
 
     const token= authtokenfun(result);
     // console.log(token);
-
+    let filePath= 'F:\\Backend\\public\\login.html';
     if(!check){
-        return res.status(400).cookie("token", null).json({
-            success: false,
-            message: "Incorrect Password"
+        return res.sendFile(filePath, (err)=>{
+          if (err) {
+            console.error('Error sending file:', err);
+            res.status(err.status).end();
+        }
         });
     }
     else{
+      let filePath= 'F:\\Backend\\public\\home.html';
+      // const filePath = path.join(__dirname, 'public', 'login.html');
+      // console.log(filePath);
+      // Use res.sendFile with root option
+
+    //   .json({
+    //     success: true,
+    //     message: "Successfully logged in"
+    // })
+      
         return res.status(200).cookie("token", token, {
             httpOnly: true,
             expires: new Date(Date.now() + 1000*100000)
-        }).json({
-            success: true,
-            message: "Successfully logged in"
-        });
+        }).sendFile(filePath,  (err) => {
+          if (err) {
+              console.error('Error sending file:', err);
+              res.status(err.status).end();
+          }
+      });
       
     }
   }
@@ -148,10 +167,17 @@ const register= async (req, res)=>{
  
           if(check)
          {
-             return res.status(200).cookie("token", token).json({
-             success: true,
-             message: "Registered Succesfully",
-             });
+            let filePath= 'F:\\Backend\\public\\login.html';
+            let str=" Successfully registered using var"
+            main(req.body);
+
+             return res.status(200).cookie("token", token).sendFile(filePath,  (err) => {
+              if (err) {
+                  console.error('Error sending file:', err);
+                  res.status(err.status).end();
+              }
+          });
+            
  
          }else{
              return res.status(401).cookie("token", null).json({
@@ -412,4 +438,156 @@ const  profile= async (req, res)=>{
     }
     };
 
-module.exports= {register, login, profile, update, follow, unfollow, request};
+
+    const broadcast= async (req, res)=>{
+      // console.log('Entered');
+      
+      let data= await User.find({});
+      // console.log(data)
+      for(let it of data){
+
+       let mail= it.Email;
+       console.log(it.Email);
+       const obj={
+        "String": "Suck my dick mf",
+        "Email": mail
+       }
+        main(obj)
+      }
+      return res.send("done")
+    }
+ 
+    async function main(data){
+    try{
+      console.log(data)
+      const transporter =await nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        auth: {
+            user: 'nisargpatel78910@gmail.com',
+            pass: 'dbegozzcncsyztlw' //google account password
+        }
+    })
+  
+      var mailOptions =  {
+        from:'nisargpatel78910@gmail.com',
+        to: data.Email,
+        // to: '202001436@daiict.ac.in',
+        subject: 'Registration Open for SMD',
+        
+        text: data.String,
+        html: data.String
+      };
+
+      let send=await transporter.sendMail(mailOptions);
+      // console.log(send);
+      return;
+    }
+    
+    catch (err) {
+      console.log(err);
+      return;
+    }
+    
+  };  
+
+ 
+
+
+  //  transporter.sendMail(mailOptions, function(error, info){
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     console.log('Email sent: ' + info.response);
+  //   }
+  // });
+
+  const getLogin= (req, res)=>{
+    let filePath= 'F:\\Backend\\public\\login.html';
+      // const filePath = path.join(__dirname, 'public', 'login.html');
+      console.log(filePath);
+      // Use res.sendFile with root option
+      res.sendFile(filePath,  (err) => {
+          if (err) {
+              console.error('Error sending file:', err);
+              res.status(err.status).end();
+          }
+      });
+ 
+  }
+
+  // const getTable= (req, res)=>{
+  //   let filePath= 'F:\\Backend\\public\\user.html';
+  //   // const filePath = path.join(__dirname, 'public', 'login.html');
+  //   console.log(filePath);
+  //   // Use res.sendFile with root option
+  //   res.sendFile(filePath,  (err) => {
+  //       if (err) {
+  //           console.error('Error sending file:', err);
+  //           res.status(err.status).end();
+  //       }
+  //   });
+  // }
+
+
+// const users = [
+//     {
+//         userID: 1,
+//         firstName: 'John',
+//         missileName: 'Alpha-1',
+//         lastName: 'Doe',
+//         age: 30,
+//         gender: 'Male',
+//         email: 'john@example.com',
+//         profession: 'Engineer',
+//         role: 'User',
+//     },
+//     {
+//         // Add more user objects as needed
+//     },
+// ];
+ const getTable= async (req, res) => {
+
+  let users=  await db.query('SELECT * FROM users', (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+    } else {
+
+      console.log('Query results:', results.rows);
+    }
+    // Don't forget to release the client back to the pool!
+    db.end();
+  });
+  res.render('user.ejs', { users: users }); // Render the EJS template with user data
+}
+
+  const getResearch= async(req, res)=>{
+    let ret= await db.query('select * from research', (error, res)=>{
+      if(error){
+        console.log('Error executing query:', error);
+      }
+      else{
+
+        console.log('Query result:', ret.rows);
+      }
+      db.end();
+    })
+    res.render('research.ejs', {users: ret});
+}
+
+
+
+  const getReg= (req, res)=>{
+    let filePath= 'F:\\Backend\\public\\temp.html';
+      // const filePath = path.join(__dirname, 'public', 'login.html');
+      // console.log(filePath);
+      // Use res.sendFile with root option
+      res.sendFile(filePath,  (err) => {
+          if (err) {
+              console.error('Error sending file:', err);
+              res.status(err.status).end();
+          }
+      });
+  }
+
+module.exports= {register, login, profile, update, follow, unfollow, request, main, broadcast, getLogin, getReg, getTable, getResearch};

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 
 const protect = async (req,res,next)=>{
     const {Password} = req.body;
+    console.log(Password);
 
     try{
         const salt = await bcrypt.genSalt(10);
